@@ -11,8 +11,15 @@
 class TcpStream
 {
 	SOCKET sock;
+	std::string addr;
+	UINT16 port;
+
+	char buffer[4096];
+
 public:
-	TcpStream(std::string addr);
+	TcpStream(SOCKET sock);
+	~TcpStream() noexcept;
+	SOCKET getSocket() const;
 
 };
 

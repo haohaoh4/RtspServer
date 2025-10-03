@@ -3,7 +3,7 @@
 int main() try {	
 	std::cout << "Server Starting..." << std::endl;
 	auto server = RtspServer();
-	// test commit
+	server.run();
 
 	std::cout << "Server Closing..." << std::endl;
 	return 0;
