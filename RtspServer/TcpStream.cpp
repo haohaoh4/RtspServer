@@ -11,7 +11,7 @@ TcpStream::TcpStream(SOCKET sock) : sock(sock) {
 }
 TcpStream::~TcpStream() {
 	shutdown(sock, SD_BOTH);
-	//add something
+	//add something 2
 }
 SOCKET TcpStream::getSocket() const {
 	return sock;
