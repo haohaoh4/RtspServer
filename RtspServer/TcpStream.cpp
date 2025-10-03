@@ -10,7 +10,7 @@ TcpStream::TcpStream(SOCKET sock) : sock(sock) {
 
 }
 TcpStream::~TcpStream() {
-
+	//add something
 }
 SOCKET TcpStream::getSocket() const {
 	return sock;
