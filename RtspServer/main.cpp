@@ -3,9 +3,7 @@
 int main() try {	
 	std::cout << "Server Starting..." << std::endl;
 	auto server = RtspServer();
-	// run server
-	// wait for exit signal
-	// stop server
+	// test commit
 
 	std::cout << "Server Closing..." << std::endl;
 	return 0;
