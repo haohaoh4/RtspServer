@@ -10,7 +10,7 @@ class RtspServer
 	static inline std::once_flag wsa_flag;
 public:
 	struct Config {
-		std::string address = "::1";
+		std::string address = "0.0.0.0";
 		uint16_t port = 554;
 	};
 	RtspServer(const Config& cfg = Config());

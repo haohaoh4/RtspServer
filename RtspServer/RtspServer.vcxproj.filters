@@ -21,6 +21,15 @@
     <ClInclude Include="TcpStream.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="RtspParser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RtspSession.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RtspRequest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RtspServer.cpp">
@@ -30,6 +39,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="TcpStream.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RtspParser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RtspSession.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
