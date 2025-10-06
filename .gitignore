@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/1.mp4
+/2.mp4
+/3.mp4
+/RtspServer/test.h264
+/RtspServer/test1.h264
+/RtspServer/test2.h264
