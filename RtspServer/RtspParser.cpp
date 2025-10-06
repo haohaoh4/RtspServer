@@ -32,7 +32,6 @@ RtspParser::ParseResult RtspParser::parse(std::span<const char> data) {
 				break;
 			case S_METHOD:
 				if (buffer[pos] == ' ') {
-					//mark = pos;
 					state = S_URL;
 					std::string method_str = buffer.substr(mark, pos - mark);
 					current_request.method = get_rtsp_method(method_str);
@@ -41,6 +40,7 @@ RtspParser::ParseResult RtspParser::parse(std::span<const char> data) {
 						return PR_ERROR;
 					}
 					beg = pos + 1;
+					mark = beg;
 				}
 				else if (buffer[pos] < 'A' || buffer[pos] > 'Z') {
 					state = S_ERROR;
