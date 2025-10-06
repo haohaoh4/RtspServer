@@ -15,18 +15,15 @@ TcpStream::~TcpStream() {
 SOCKET TcpStream::getSocket() const {
 	return sock;
 }
-bool TcpStream::read(std::span<char> data) {
+int TcpStream::read(std::span<char> data) {
 	int recv_len = recv(sock, data.data(), data.size(), 0);
 	if (recv_len == SOCKET_ERROR) {
-		return false;
-	}else if(recv_len == 0) {
-		return false;
-	}
-	else {
-		return true;
+		return -1;
+	} else {
+		return recv_len;
 	}
 }
-bool TcpStream::write(const std::span<const char> data) {
+bool TcpStream::write(std::span<const char> data) {
 	auto datatmp = data;
 	while(datatmp.size() > 0) {
 		int sent_len = send(sock, datatmp.data(), datatmp.size(), 0); // 不保证一次发完所有数据

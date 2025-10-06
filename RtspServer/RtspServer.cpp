@@ -87,7 +87,7 @@ void RtspServer::run() {
 				std::cerr << "accept failed: " << WSAGetLastError() << std::endl;
 				continue;
 			}
-			sessions.push_back(std::make_unique<RtspSession>(client_sock));
+			sessions.push_back(std::make_unique<RtspSession>(client_sock)); // add new session
 			FD_SET(client_sock, &readfds);
 			std::cout << "Accepted new connection, total sessions: " << sessions.size() << std::endl;
 		}

@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="RtpStructs.h" />
     <ClInclude Include="RtspParser.h" />
     <ClInclude Include="RtspServer.h" />
     <ClInclude Include="RtspSession.h" />
@@ -143,6 +144,9 @@
     <ClCompile Include="RtspServer.cpp" />
     <ClCompile Include="RtspSession.cpp" />
     <ClCompile Include="TcpStream.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\test.h264" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

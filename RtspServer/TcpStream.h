@@ -6,6 +6,7 @@
 #include <mutex>
 #include <span>
 #include <array>
+
 //#include <threads.h>
 
 #pragma comment(lib, "ws2_32.lib")
@@ -25,9 +26,8 @@ public:
 	~TcpStream() noexcept;
 	SOCKET getSocket() const;
 
-	bool read(std::span<char> data);
-	bool write(const std::span<const char> data);
-
+	bool write(std::span<const char> data);
+	int read(std::span<char> data);
 };
 
 

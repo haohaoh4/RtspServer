@@ -30,6 +30,9 @@
     <ClInclude Include="RtspRequest.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="RtpStructs.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RtspServer.cpp">
@@ -47,5 +50,10 @@
     <ClCompile Include="RtspSession.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\test.h264">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>
