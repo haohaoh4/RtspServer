@@ -39,3 +39,40 @@ inline void rtp_header_set_marker(RtpHeader& header, bool marker) {
 inline void rtp_header_set_payload_type(RtpHeader& header, uint8_t payload_type) {
 	header.mpt = (header.mpt & 0x80) | (payload_type & 0x7F);
 }
+
+struct RtcpHeader {
+	uint8_t vpxrc;       // Version(2), Padding(0), Reception Report Count(0)
+	uint8_t pt;         // Packet Type (200 for SR, 201 for RR, 202 for SDES, 203 for BYE, 204 for APP)
+	uint16_t length;    // Length in words - 1
+};
+struct RtcpSr {
+	RtcpHeader header;
+	uint32_t ssrc;          // Sender SSRC
+	uint32_t ntp_sec;      // NTP timestamp seconds
+	uint32_t ntp_frac;     // NTP timestamp fraction
+	uint32_t rtp_timestamp; // RTP timestamp
+	uint32_t packet_count;  // Sender's packet count
+	uint32_t octet_count;   // Sender's octet count
+};
+struct RtcpSdes {
+	RtcpHeader header;
+	uint32_t ssrc; // SSRC/CSRC
+	// Followed by zero or more chunks of:
+	// uint8_t type;
+	// uint8_t length;
+	// uint8_t value[length];
+	// End with a zero byte
+};
+RtcpSr* rtcp_sr_init(RtcpSr& sr, uint32_t ssrc, uint32_t rtp_timestamp, uint32_t ntp_sec, uint32_t ntp_frac, uint32_t packet_count, uint32_t octet_count) {
+	std::memset(&sr, 0, sizeof(RtcpSr));
+	sr.header.vpxrc = (2 << 6); // Version 2
+	sr.header.pt = 200;         // Packet Type 200 for SR
+	sr.header.length = htons((sizeof(RtcpSr) / 4) - 1);
+	sr.ssrc = htonl(ssrc);
+	sr.ntp_sec = htonl(ntp_sec);
+	sr.ntp_frac = htonl(ntp_frac);
+	sr.rtp_timestamp = htonl(rtp_timestamp);
+	sr.packet_count = htonl(packet_count);
+	sr.octet_count = htonl(octet_count);
+	return &sr;
+}

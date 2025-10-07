@@ -16,7 +16,7 @@ public:
 	RtspServer(const Config& cfg = Config());
 	~RtspServer() noexcept;
 	void run();
-	void stop();
+	//void stop();
 	Config config;
 	SOCKET server_sock;
 	//RTSP sessions management

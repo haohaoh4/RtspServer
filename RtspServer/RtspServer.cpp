@@ -44,20 +44,20 @@ void RtspServer::run() {
 	FD_ZERO(&readfds);
 	FD_SET(server_sock, &readfds);
 	while (1) {
-		std::cout << "Waiting for connections..." << std::endl;
+		//std::cout << "Waiting for connections..." << std::endl;
 
 		timeval timeout_storage = {};
 		timeval* select_timeout_p = nullptr;
 		auto now = RtspSession::clock::now();
 		auto nearest_timeout = now + std::chrono::seconds(60);
 		// format time to text
-		std::cout << "nearest_timeout: " << std::chrono::duration_cast<std::chrono::milliseconds>(nearest_timeout.time_since_epoch()).count() << std::endl;
+		//std::cout << "nearest_timeout: " << std::chrono::duration_cast<std::chrono::milliseconds>(nearest_timeout.time_since_epoch()).count() << std::endl;
 		for (const auto& session : sessions) {
 			if (session->rtp_enabled) {
 				if(session.get()->next_rtp_timeout < nearest_timeout) {
 					nearest_timeout = session->next_rtp_timeout;
 				}
-				std::cout << "new nearest_timeout: " << std::chrono::duration_cast<std::chrono::milliseconds>(nearest_timeout.time_since_epoch()).count() << std::endl;
+				//std::cout << "new nearest_timeout: " << std::chrono::duration_cast<std::chrono::milliseconds>(nearest_timeout.time_since_epoch()).count() << std::endl;
 				select_timeout_p = &timeout_storage;
 				break;
 			}
@@ -70,7 +70,7 @@ void RtspServer::run() {
 			if (timeout_ms > 1000) timeout_ms = 1000;
 			select_timeout_p->tv_sec = timeout_ms / 1000;
 			select_timeout_p->tv_usec = (timeout_ms % 1000) * 1000;
-			std::cout << "Next RTP timeout in " << timeout_ms << " ms" << std::endl;
+			//std::cout << "Next RTP timeout in " << timeout_ms << " ms" << std::endl;
 		}
 
 		fd_set tmpfds = readfds;
@@ -79,7 +79,7 @@ void RtspServer::run() {
 			std::cerr << "select failed: " << WSAGetLastError() << std::endl;
 			break;
 		}
-		std::cout << "Activity detected..." << activity << std::endl;
+		//std::cout << "Activity detected..." << activity << std::endl;
 
 		if (FD_ISSET(server_sock, &tmpfds)) {
 			SOCKET client_sock = accept(server_sock, NULL, NULL);
@@ -91,13 +91,13 @@ void RtspServer::run() {
 			FD_SET(client_sock, &readfds);
 			std::cout << "Accepted new connection, total sessions: " << sessions.size() << std::endl;
 		}
-		std::cout << "Checking sessions for readability and time out..." << std::endl;
+		//std::cout << "Checking sessions for readability and time out..." << std::endl;
 		now = std::chrono::steady_clock::now();
 		for(auto it=sessions.begin(); it!=sessions.end(); ) {
 			//std::cout << "Checking session with socket: " << (*it)->getSocket() << std::endl;
 			if ((*it)->rtp_enabled && (*it)->next_rtp_timeout <= now) {
 				(*it)->rtp_time_out();
-				std::cout << "RTP timeout occurred for socket: " << (*it)->getSocket() << std::endl;
+				//std::cout << "RTP timeout occurred for socket: " << (*it)->getSocket() << std::endl;
 			}
 			if (FD_ISSET((*it)->getSocket(), &tmpfds)){
 				std::cout << "Data available on socket: " << (*it)->getSocket() << std::endl;
