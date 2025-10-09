@@ -294,7 +294,7 @@ bool RtspSession::rtp_send_H264_Frame(const struct RtpHeader& rtp_header, const 
 	}
 }
 void RtspSession::rtcp_message() {
-	return;
+	//return;
 	std::cout << "Sending RTCP SR packet" << std::endl;
 	RtcpSr rtcp_packet;
 	rtcp_sr_init(rtcp_packet, 0x12345678, rtcp_sr_timestamp, uint32_t(m_ntp_timestamp >> 32), uint32_t(m_ntp_timestamp & 0xFFFFFFFF), rtp_seq - 1, rtp_octet_count);

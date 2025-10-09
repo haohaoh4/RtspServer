@@ -1,7 +1,14 @@
 #include "RtspServer.h"
 #include <algorithm>
+#include <csignal>
+#pragma comment(lib, "winmm")
 
 RtspServer::RtspServer(const Config& cfg) : config(cfg) {
+	timeBeginPeriod(3);
+	running = true;
+
+	std::signal(SIGINT, ctrlc_handler);
+
 	std::cout << config.address << ":" << config.port << std::endl;
 	std::call_once(wsa_flag, []() {
 		WSADATA wsaData;
@@ -43,7 +50,7 @@ void RtspServer::run() {
 	fd_set readfds;
 	FD_ZERO(&readfds);
 	FD_SET(server_sock, &readfds);
-	while (1) {
+	while (running) {
 		//std::cout << "Waiting for connections..." << std::endl;
 
 		timeval timeout_storage = {};
@@ -120,4 +127,11 @@ void RtspServer::run() {
 
 	}
 
+}
+
+void RtspServer::ctrlc_handler(int) {
+	std::cout << "Ctrl-C pressed, stopping server..." << std::endl;
+	timeEndPeriod(3);
+	WSACleanup();
+	running = false;
 }

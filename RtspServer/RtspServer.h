@@ -16,11 +16,14 @@ public:
 	RtspServer(const Config& cfg = Config());
 	~RtspServer() noexcept;
 	void run();
-	//void stop();
+	//static void stop();
 	Config config;
 	SOCKET server_sock;
 	//RTSP sessions management
 	std::vector<std::unique_ptr<RtspSession>> sessions;
 
+	inline static bool volatile running;
+	// ctrl-c handler to stop the server
+	static void ctrlc_handler(int);
 };
 
