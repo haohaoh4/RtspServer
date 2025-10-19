@@ -11,7 +11,6 @@ project ("RtspServer")
 
 add_subdirectory ("RtspServer")
 
-
 set(RESOURCE_DIR ${CMAKE_SOURCE_DIR}/resources)
 set(OUTPUT_DIR ${CMAKE_BINARY_DIR}/resources)
 
