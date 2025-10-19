@@ -6,14 +6,14 @@
 #include <mutex>
 #include <span>
 #include <array>
-
+#include "net_compat.h"
 //#include <threads.h>
 
 #pragma comment(lib, "ws2_32.lib")
 
 class TcpStream
 {
-	SOCKET sock;
+	socket_t sock;
 	//std::string addr;
 	//UINT16 port;
 
@@ -22,9 +22,9 @@ class TcpStream
 	//int buffer_end = 0;
 
 public:
-	TcpStream(SOCKET sock);
+	TcpStream(socket_t sock);
 	~TcpStream() noexcept;
-	SOCKET getSocket() const;
+	socket_t getSocket() const;
 
 	bool write(std::span<const char> data);
 	int read(std::span<char> data);

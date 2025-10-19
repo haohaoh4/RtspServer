@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-TcpStream::TcpStream(SOCKET sock) : sock(sock) {
+TcpStream::TcpStream(socket_t sock) : sock(sock) {
 	std::cout << "TcpStream created with socket: " << sock << std::endl;
 	if (sock == INVALID_SOCKET) {
 		throw std::runtime_error("socket failed: " + std::to_string(WSAGetLastError()));
@@ -12,7 +12,7 @@ TcpStream::TcpStream(SOCKET sock) : sock(sock) {
 TcpStream::~TcpStream() {
 	shutdown(sock, SD_BOTH);
 }
-SOCKET TcpStream::getSocket() const {
+socket_t TcpStream::getSocket() const {
 	return sock;
 }
 int TcpStream::read(std::span<char> data) {
@@ -26,7 +26,7 @@ int TcpStream::read(std::span<char> data) {
 bool TcpStream::write(std::span<const char> data) {
 	auto datatmp = data;
 	while(datatmp.size() > 0) {
-		int sent_len = send(sock, datatmp.data(), datatmp.size(), 0); // ²»±£Ö¤Ò»´Î·¢ÍêËùÓĞÊı¾İ
+		int sent_len = send(sock, datatmp.data(), datatmp.size(), 0); // ä¸ä¿è¯ä¸€æ¬¡å‘å®Œæ‰€æœ‰æ•°æ®
 		if (sent_len == SOCKET_ERROR) {
 			return false;
 		}

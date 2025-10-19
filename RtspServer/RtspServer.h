@@ -5,6 +5,10 @@
 #include <iostream>
 #include <vector>
 
+#ifdef _WIN32
+#pragma comment(lib, "winmm")
+#endif
+
 class RtspServer
 {
 	static inline std::once_flag wsa_flag;
@@ -18,7 +22,7 @@ public:
 	void run();
 	//static void stop();
 	Config config;
-	SOCKET server_sock;
+	socket_t server_sock;
 	//RTSP sessions management
 	std::vector<std::unique_ptr<RtspSession>> sessions;
 

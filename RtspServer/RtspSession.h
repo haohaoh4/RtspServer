@@ -18,7 +18,7 @@ private:
 
 public:
 	//SOCKET client_sock;
-	RtspSession(SOCKET client_sock, const std::string& h264_filename = "test.h264");
+	RtspSession(SOCKET client_sock, const std::string& h264_filename = "../resources/test.h264");
 	~RtspSession() noexcept;
 	bool on_readable();
 	SOCKET getSocket() const;

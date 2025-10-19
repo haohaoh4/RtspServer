@@ -7,9 +7,8 @@ RtspServer::RtspServer(const Config& cfg) : config(cfg) {
 	timeBeginPeriod(3);
 	running = true;
 
-	std::signal(SIGINT, ctrlc_handler);
-
-	std::cout << config.address << ":" << config.port << std::endl;
+#ifdef _WIN32
+	timeBeginPeriod(2);
 	std::call_once(wsa_flag, []() {
 		WSADATA wsaData;
 		int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -18,7 +17,12 @@ RtspServer::RtspServer(const Config& cfg) : config(cfg) {
 		}
 		std::cout << "Startup WSA" << std::endl;
 		});
+#endif	
 
+	running = true;
+	std::signal(SIGINT, ctrlc_handler);
+
+	std::cout << config.address << ":" << config.port << std::endl;
 	server_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (server_sock == INVALID_SOCKET) {
 		throw std::runtime_error("socket failed: " + std::to_string(WSAGetLastError()));
@@ -131,7 +135,7 @@ void RtspServer::run() {
 
 void RtspServer::ctrlc_handler(int) {
 	std::cout << "Ctrl-C pressed, stopping server..." << std::endl;
-	timeEndPeriod(3);
+	timeEndPeriod(2);
 	WSACleanup();
 	running = false;
 }

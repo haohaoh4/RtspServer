@@ -25,7 +25,7 @@ RtspSession::RtspSession(SOCKET client_sock, const std::string& h264_filename) :
 	timestamp = 0;
 	rtcp_sr_timestamp = 0;
 	m_ntp_timestamp = 0;
-	m_rtcp_interval = std::chrono::milliseconds(5000);
+	m_rtcp_interval = std::chrono::milliseconds(2000);
 	rtp_timeout = std::chrono::milliseconds(1000 / fps);
 	timestamp_inc = 90000 / fps; // 90kHz clock
 
@@ -100,7 +100,7 @@ bool RtspSession::on_readable() {
 				stream.write(std::span<const char>(response.data(), response.size()));
 				// send RTP packets here
 				rtp_enabled = true;
-				rtp_timeout = std::chrono::milliseconds(1000 / fps);
+				//rtp_timeout = std::chrono::milliseconds(1000 / fps);
 				
 				last_rtcp_message = clock::now();
 				m_ntp_timestamp = ntp64_now(std::chrono::system_clock::now());
