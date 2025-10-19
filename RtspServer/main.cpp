@@ -1,5 +1,5 @@
 #include "RtspServer.h"
-#include <variant>
+
 int main() try {	
 	std::cout << "Server Starting..." << std::endl;
 	auto server = RtspServer();
