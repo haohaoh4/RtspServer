@@ -2,7 +2,8 @@
 
 ```
 RtspServer/
-├─ RtspServer.sln      
+├─ CMakeLists.txt
+├─ CMakePresets.json     
 ├─ RtspServer/
 │  ├─  main.cpp                     # 程序入口：解析参数、启动服务器
 │  ├─  RtspServer.h/.cpp            # RTSP 服务器对象：监听套接字、select() 事件循环
