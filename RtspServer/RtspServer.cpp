@@ -1,10 +1,9 @@
 #include "RtspServer.h"
 #include <algorithm>
 #include <csignal>
-#pragma comment(lib, "winmm")
-
+#include "net_compat.h"
+//
 RtspServer::RtspServer(const Config& cfg) : config(cfg) {
-	timeBeginPeriod(3);
 	running = true;
 
 #ifdef _WIN32
@@ -25,7 +24,7 @@ RtspServer::RtspServer(const Config& cfg) : config(cfg) {
 	std::cout << config.address << ":" << config.port << std::endl;
 	server_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (server_sock == INVALID_SOCKET) {
-		throw std::runtime_error("socket failed: " + std::to_string(WSAGetLastError()));
+		throw std::runtime_error("socket failed: " + std::to_string(last_net_error()));
 	}
 
 	sockaddr_in server_addr = {};
@@ -34,18 +33,19 @@ RtspServer::RtspServer(const Config& cfg) : config(cfg) {
 	server_addr.sin_port = htons(config.port);
 	if (bind(server_sock, (sockaddr*)&server_addr, sizeof(server_addr)) == SOCKET_ERROR) {
 		closesocket(server_sock);
-		throw std::runtime_error("bind failed: " + std::to_string(WSAGetLastError()));
+		//throw std::runtime_error("bind failed: " + std::to_string(WSAGetLastError()));
+		throw std::runtime_error("bind failed: ");
 	}
 
 	if (listen(server_sock, SOMAXCONN) == SOCKET_ERROR) {
 		closesocket(server_sock);
-		throw std::runtime_error("listen failed: " + std::to_string(WSAGetLastError()));
+		//throw std::runtime_error("listen failed: " + std::to_string(WSAGetLastError()));
 	}
 	std::cout << "Server listening on " << config.address << ":" << config.port << std::endl;
 }
 
 RtspServer::~RtspServer() {
-	WSACleanup();
+	net_cleanup();
 	std::cout << "Cleanup WSA" << std::endl;
 }
 
@@ -55,6 +55,8 @@ void RtspServer::run() {
 	FD_ZERO(&readfds);
 	FD_SET(server_sock, &readfds);
 	while (running) {
+
+		int max_fd = server_sock;
 		//std::cout << "Waiting for connections..." << std::endl;
 
 		timeval timeout_storage = {};
@@ -64,13 +66,14 @@ void RtspServer::run() {
 		// format time to text
 		//std::cout << "nearest_timeout: " << std::chrono::duration_cast<std::chrono::milliseconds>(nearest_timeout.time_since_epoch()).count() << std::endl;
 		for (const auto& session : sessions) {
+			max_fd = std::max(max_fd, (int)session->getSocket());
 			if (session->rtp_enabled) {
 				if(session.get()->next_rtp_timeout < nearest_timeout) {
 					nearest_timeout = session->next_rtp_timeout;
 				}
 				//std::cout << "new nearest_timeout: " << std::chrono::duration_cast<std::chrono::milliseconds>(nearest_timeout.time_since_epoch()).count() << std::endl;
 				select_timeout_p = &timeout_storage;
-				break;
+				//break;
 			}
 		}
 		if (nearest_timeout < now) {
@@ -85,17 +88,17 @@ void RtspServer::run() {
 		}
 
 		fd_set tmpfds = readfds;
-		int activity = select(0, &tmpfds, NULL, NULL, select_timeout_p);
+		int activity = select(max_fd + 2, &tmpfds, NULL, NULL, select_timeout_p);
 		if (activity == SOCKET_ERROR) {
-			std::cerr << "select failed: " << WSAGetLastError() << std::endl;
+			std::cerr << "select failed: " << last_net_error() << std::endl;
 			break;
 		}
 		//std::cout << "Activity detected..." << activity << std::endl;
 
 		if (FD_ISSET(server_sock, &tmpfds)) {
-			SOCKET client_sock = accept(server_sock, NULL, NULL);
+			socket_t client_sock = accept(server_sock, NULL, NULL);
 			if (client_sock == INVALID_SOCKET) {
-				std::cerr << "accept failed: " << WSAGetLastError() << std::endl;
+				std::cerr << "accept failed: " << last_net_error() << std::endl;
 				continue;
 			}
 			sessions.push_back(std::make_unique<RtspSession>(client_sock)); // add new session
@@ -135,7 +138,9 @@ void RtspServer::run() {
 
 void RtspServer::ctrlc_handler(int) {
 	std::cout << "Ctrl-C pressed, stopping server..." << std::endl;
+#ifdef _WIN32
 	timeEndPeriod(2);
 	WSACleanup();
+#endif
 	running = false;
 }

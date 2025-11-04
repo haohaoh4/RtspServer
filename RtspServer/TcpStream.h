@@ -1,15 +1,14 @@
 #pragma once
 
 #include <string>
-#include <WinSock2.h>
-#include <WS2tcpip.h>
+//#include <WinSock2.h>
+//#include <WS2tcpip.h>
 #include <mutex>
 #include <span>
 #include <array>
 #include "net_compat.h"
 //#include <threads.h>
 
-#pragma comment(lib, "ws2_32.lib")
 
 class TcpStream
 {

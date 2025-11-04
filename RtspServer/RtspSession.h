@@ -18,10 +18,10 @@ private:
 
 public:
 	//SOCKET client_sock;
-	RtspSession(SOCKET client_sock, const std::string& h264_filename = "../resources/test.h264");
+	RtspSession(socket_t client_sock, const std::string& h264_filename = "../resources/test.h264");
 	~RtspSession() noexcept;
 	bool on_readable();
-	SOCKET getSocket() const;
+	socket_t getSocket() const;
 
 	bool rtp_enabled = false;
 	//std::chrono rtp_timeout = 40ms;

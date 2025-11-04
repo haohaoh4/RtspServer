@@ -6,7 +6,7 @@
 #include <filesystem>
 #include "RtpStructs.h"
 
-RtspSession::RtspSession(SOCKET client_sock, const std::string& h264_filename) : stream(client_sock) {
+RtspSession::RtspSession(socket_t client_sock, const std::string& h264_filename) : stream(client_sock) {
 	const size_t buffer_size = 64 * 1024 * 1024;
 	read_buffer = new char[buffer_size];
 	h264_file.rdbuf()->pubsetbuf(read_buffer, buffer_size);
@@ -130,7 +130,7 @@ bool RtspSession::on_readable() {
 	
 	return true;
 }
-SOCKET RtspSession::getSocket() const {
+socket_t RtspSession::getSocket() const {
 	return stream.getSocket();
 }
 bool RtspSession::rtp_time_out() {

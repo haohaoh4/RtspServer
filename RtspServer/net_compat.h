@@ -8,6 +8,8 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "winmm")
+
 using socket_t = SOCKET;
 inline constexpr socket_t INVALID_SOCKET_T = INVALID_SOCKET;
 inline int last_net_error() { return WSAGetLastError(); }
@@ -31,6 +33,11 @@ inline int shutdown_wr(socket_t s) { return ::shutdown(s, SD_SEND); }
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <errno.h>
+#define SOCKET_ERROR (-1) 
+#define INVALID_SOCKET (-1)
+#define SD_RECEIVE SHUT_RD
+#define SD_SEND    SHUT_WR
+#define SD_BOTH    SHUT_RDWR
 using socket_t = int;
 inline constexpr socket_t INVALID_SOCKET_T = -1;
 inline int last_net_error() { return errno; }
@@ -38,6 +45,7 @@ inline void closesocket_wrap(socket_t s) { ::close(s); }
 inline bool net_init_once(std::string* /*err*/= nullptr) { return true; }
 inline void net_cleanup() {}
 inline int shutdown_wr(socket_t s) { return ::shutdown(s, SHUT_WR); }
+#define closesocket close
 #endif
 
 inline std::error_code net_ec(int ev) {

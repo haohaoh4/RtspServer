@@ -5,7 +5,7 @@
 TcpStream::TcpStream(socket_t sock) : sock(sock) {
 	std::cout << "TcpStream created with socket: " << sock << std::endl;
 	if (sock == INVALID_SOCKET) {
-		throw std::runtime_error("socket failed: " + std::to_string(WSAGetLastError()));
+		throw std::runtime_error("socket failed: " + std::to_string(last_net_error()));
 	}
 	//setsockopt()
 }

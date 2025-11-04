@@ -1,7 +1,7 @@
 #pragma once
-#include <winsock2.h>
 #include <cstdint>
 #include <cstring>
+#include "net_compat.h"
 
 struct RtpHeader {
 	uint8_t vpxcc;       // Version(2), Padding(0), Extension(0), CSRC Count(0)

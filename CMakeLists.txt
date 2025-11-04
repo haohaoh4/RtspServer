@@ -1,4 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required (VERSION 3.16)
 
 option(PRINT_DIRS "Print key CMake dir variables" ON)
 
@@ -9,6 +9,7 @@ endif()
 
 project ("RtspServer")
 
+include_directories("${CMAKE_SOURCE_DIR}/asio-1.36.0/include")
 add_subdirectory ("RtspServer")
 
 set(RESOURCE_DIR ${CMAKE_SOURCE_DIR}/resources)
