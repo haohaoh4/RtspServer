@@ -31,15 +31,16 @@ RtspServer::RtspServer(const Config& cfg) : config(cfg) {
 	server_addr.sin_family = AF_INET;
 	inet_pton(AF_INET, config.address.c_str(), &server_addr.sin_addr);
 	server_addr.sin_port = htons(config.port);
+
 	if (bind(server_sock, (sockaddr*)&server_addr, sizeof(server_addr)) == SOCKET_ERROR) {
 		closesocket(server_sock);
-		//throw std::runtime_error("bind failed: " + std::to_string(WSAGetLastError()));
+		throw std::runtime_error("bind failed: " + std::to_string(last_net_error()));
 		throw std::runtime_error("bind failed: ");
 	}
 
 	if (listen(server_sock, SOMAXCONN) == SOCKET_ERROR) {
 		closesocket(server_sock);
-		//throw std::runtime_error("listen failed: " + std::to_string(WSAGetLastError()));
+		throw std::runtime_error("listen failed: " + std::to_string(last_net_error()));
 	}
 	std::cout << "Server listening on " << config.address << ":" << config.port << std::endl;
 }

@@ -43,11 +43,13 @@ bool RtspSession::on_readable() {
 	std::array<char, 4096> buffer;
 	int read_size = stream.read(buffer);
 	if(read_size <= 0) {
+		std::cout << "Exit because read_size = " << read_size << std::endl;
 		// connection closed or error
 		return false;
 	}
 	auto pr = parser.parse(std::span<const char>(buffer.data(), read_size));
 	if(pr == RtspParser::PR_ERROR) {
+		std::cout << "Disconnect because of Parser Error" << std::endl;
 		// parse error
 		return false;
 	}else if(pr == RtspParser::PR_INCOMPLETE) {

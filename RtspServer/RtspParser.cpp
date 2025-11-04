@@ -14,14 +14,34 @@ RtspParser::ParseResult RtspParser::parse(std::span<const char> data) {
 
 	for (; pos < last; pos++) {
 		switch (state) {
-			case S_RTSP_CONTENT:
-				return rtsp_content_parse();
+			case S_RTSP_CONTENT_HEADER1:
+				state = S_RTSP_CONTENT_HEADER2;
+				break;
+			case S_RTSP_CONTENT_HEADER2:
+				state = S_RTSP_CONTENT_LEN1;
+				rtsp_content_packet_len = (buffer[pos] & 0xFF) << 8;
+				break;
+			case S_RTSP_CONTENT_LEN1:
+				state = S_RTSP_CONTENT_LEN2;
+				rtsp_content_packet_len |= (buffer[pos] & 0xFF);
+				break;
+			case S_RTSP_CONTENT_LEN2:
+				rtsp_content_packet_len--;
+				if(rtsp_content_packet_len == 0) {
+					state = S_START;
+					return PR_OK;
+				} else {
+					rtsp_content_packet_len--;
+					state = S_RTSP_CONTENT_LEN2;
+				}
+				break;
 			case S_START:
 				current_request = RtspRequest{ RtspMethod::NONE };
 
 				if (buffer[pos] == '$') {
-					state = S_RTSP_CONTENT;
-					return rtsp_content_parse();
+					state = S_RTSP_CONTENT_HEADER1;
+					//return rtsp_content_parse();
+					//break;
 				} else if(buffer[pos] < 'A' || buffer[pos] > 'Z') {
 					state = S_ERROR;
 					return PR_ERROR;
@@ -203,7 +223,7 @@ ok_end:
 	return PR_OK;
 }
 RtspParser::ParseResult RtspParser::rtsp_content_parse() {
-	pos++;
+	//pos++;
 	return PR_OK;
 }
 

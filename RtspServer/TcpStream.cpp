@@ -17,6 +17,7 @@ socket_t TcpStream::getSocket() const {
 }
 int TcpStream::read(std::span<char> data) {
 	int recv_len = recv(sock, data.data(), data.size(), 0);
+	std::cout << "TcpStream read " << recv_len << " bytes from socket: " << sock << std::endl;
 	if (recv_len == SOCKET_ERROR) {
 		return -1;
 	} else {

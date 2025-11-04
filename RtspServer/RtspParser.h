@@ -18,11 +18,15 @@ class RtspParser
 		S_HEADER_ALMOST_DONE, 
 		S_HEADERS_ALMOST_DONE,
 		S_DONE,
-		S_RTSP_CONTENT,
+		S_RTSP_CONTENT_HEADER1,
+		S_RTSP_CONTENT_HEADER2,
+		S_RTSP_CONTENT_LEN1,
+		S_RTSP_CONTENT_LEN2,
 		S_ERROR
 	} state;
 	std::string buffer;
 	int pos, beg, last, mark, value_start, header_start;
+	int rtsp_content_packet_len;
 public:
 	RtspParser();
 	~RtspParser() noexcept;
@@ -39,5 +43,6 @@ public:
 	std::queue<RtspRequest> requests;
 	RtspRequest current_request;
 	ParseResult rtsp_content_parse();
+
 };
 

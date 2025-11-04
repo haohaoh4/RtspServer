@@ -2,7 +2,7 @@
 
 一个简单RTSP服务器实现，支持基本的RTSP请求（OPTIONS、DESCRIBE、SETUP、PLAY、TEARDOWN）。
 
-先在Windows端编写，后移植到Linux端，已在Windows端测试过，但Linux端可能仍有bug。
+在Windows端编写，后移植到Linux端，已在本地Windows端和Linux测试过，但远程使用可能仍有bug。
 
 ```
 RtspServer/

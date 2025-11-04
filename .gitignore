@@ -367,3 +367,4 @@ FodyWeavers.xsd
 #test3.h264
 *.h264
 #*.aac
+asio-1.36.0
